@@ -5,7 +5,7 @@ import time #espera
 os.system("cls")
 print("Carregando...")
 
-resposta = requests.get("http://localhost/api-cep/") #retorna um aleatório, para específico, passe get ?id=***
+resposta = requests.get("http://paises.rf.gd/") #retorna um aleatório, para específico, passe get ?id=***
 os.system("cls")
 
 print(resposta.json())
