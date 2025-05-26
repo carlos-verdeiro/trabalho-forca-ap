@@ -349,6 +349,13 @@ while opt != 2:
     input("\033[36mPressione Enter para continuar...\033[m")
     os.system("cls")
     opt = input(menu)
+    while not opt.isdigit() or int(opt) > 2 or int(opt) < 1:
+      os.system("cls")
+      print("\033[31mOpção inválida, tente novamente.\033[m")
+      opt = input(menu)
+
+    opt = int(opt)
+
 
 
 os.system("cls")
