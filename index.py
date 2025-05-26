@@ -1,65 +1,58 @@
 import os #limpar prompt
 import time #espera
 import random #escolher palavra aleatória
+import unicodedata, re #remover acentos
 
-forca = ['''
-┌──────┐
+forca = ['''┌──────┐
 │      │
 │
 │
 │
 │
-│
-      ''','''
-┌──────┐
+│''','''┌──────┐
 │     ┌─┐
 │     └─┘
 │      
 │
 │
+│''','''┌──────┐
+│     ┌─┐
+│     └─┘
+│      │
+│      │ 
 │
-      ''','''
-┌──────┐
+│''','''┌──────┐
 │     ┌─┐
 │     └─┘
 │     /│
 │      │ 
 │
-│
-      ''','''
-┌──────┐
+│''','''┌──────┐
 │     ┌─┐
 │     └─┘
 │     /│\\
 │      │ 
 │
-│
-      ''','''
-┌──────┐
+│''','''┌──────┐
 │     ┌─┐
 │     └─┘
 │     /│\\
 │      │ 
 │     / 
-│
-      ''','''
-┌──────┐
+│''','''┌──────┐
 │     ┌─┐
 │     └─┘
 │     /│\\
 │      │ 
 │     / \\
-│
-      ''','''
-┌──────┐
+│''','''┌──────┐
 │     ┌─┐
 │     └─┘
 │    ═════
 │     /│\\
 │      │ 
 │     / \\
-    ░░░░░░░░
-      ''']
+    ░░░░░░░░''']
 
 # chame usando print(forca[*])
 
@@ -96,167 +89,267 @@ while not opt.isdigit() or int(opt) > 2 or int(opt) < 1:
       opt = input(menu)
 
 opt = int(opt)
+while opt != 2:
+    os.system("cls")
+    cat = input(categorias)
+    while not cat.isdigit() or int(cat) > 5 or int(cat) < 1:
+        os.system("cls")
+        print("\033[31mOpção inválida, tente novamente.\033[m")
+        cat = input(categorias)
+    cat = int(cat)
+    
+    if cat == 1:
+        #geral
+        categoria = "Geral"
+        print("Geral")
+    elif cat == 2:
+        #cep
+        categoria = "CEP"
+        palavras = [
+    ['Brasil', 'América do Sul', 1],
+    ['Canadá', 'América do Norte', 1],
+    ['Madagascar', 'África', 2],
+    ['Cazaquistão', 'Ásia', 3],
+    ['Islândia', 'Europa', 2],
+    ['Quirguistão', 'Ásia', 3],
+    ['Butão', 'Ásia', 2],
+    ['Liechtenstein', 'Europa', 3],
+    ['Croácia', 'Europa', 2],
+    ['Uruguai', 'América do Sul', 1],
+    ['Egito', 'África', 1],
+    ['Chade', 'África', 3],
+    ['Eslováquia', 'Europa', 3],
+    ['Togo', 'África', 1],
+    ['Zâmbia', 'África', 2],
+    ['Alasca', 'América do Norte', 2],
+    ['Tasmânia', 'Oceania', 3],
+    ['Quebec', 'América do Norte', 2],
+    ['Andaluzia', 'Europa', 3],
+    ['Baviera', 'Europa', 2],
+    ['Califórnia', 'América do Norte', 1],
+    ['Punjab', 'Ásia', 2],
+    ['Galícia', 'Europa', 3],
+    ['Guarani', 'América do Sul', 2],
+    ['Hokkaido', 'Ásia', 3],
+    ['Tóquio', 'Ásia', 1],
+    ['Nairobi', 'África', 2],
+    ['Zurique', 'Europa', 2],
+    ['Recife', 'América do Sul', 1],
+    ['Edimburgo', 'Europa', 3],
+    ['Valparaíso', 'América do Sul', 2],
+    ['Istambul', 'Europa/Ásia', 2],
+    ['Ljubljana', 'Europa', 3],
+    ['Córdoba', 'América do Sul', 2],
+    ['Bruges', 'Europa', 3],
+    ['Cracóvia', 'Europa', 2],
+    ['Arequipa', 'América do Sul', 2],
+    ['Manágua', 'América Central', 2],
+    ['Chiang Mai', 'Ásia', 2],
+    ['Xangai', 'Ásia', 1],
+    ['Osasco', 'América do Sul', 1],
+    ['Mendoza', 'América do Sul', 2],
+    ['Helsinque', 'Europa', 2],
+    ['Gênova', 'Europa', 2],
+    ['Cusco', 'América do Sul', 2],
+    ['Argentina', 'América do Sul', 1],
+    ['Chile', 'América do Sul', 1],
+    ['Colômbia', 'América do Sul', 1],
+    ['Peru', 'América do Sul', 1],
+    ['Bolívia', 'América do Sul', 2],
+    ['Equador', 'América do Sul', 2],
+    ['Paraguai', 'América do Sul', 2],
+    ['Venezuela', 'América do Sul', 1],
+    ['México', 'América do Norte', 1],
+    ['Estados Unidos', 'América do Norte', 1],
+    ['Cuba', 'América Central', 2],
+    ['Jamaica', 'América Central', 2],
+    ['Haiti', 'América Central', 3],
+    ['República Dominicana', 'América Central', 2],
+    ['Panamá', 'América Central', 2],
+    ['Costa Rica', 'América Central', 2],
+    ['Honduras', 'América Central', 3],
+    ['Nicarágua', 'América Central', 3],
+    ['El Salvador', 'América Central', 3],
+    ['Guatemala', 'América Central', 3],
+    ['Reino Unido', 'Europa', 1],
+    ['França', 'Europa', 1],
+    ['Alemanha', 'Europa', 1],
+    ['Itália', 'Europa', 1],
+    ['Espanha', 'Europa', 1],
+    ['Portugal', 'Europa', 1],
+    ['Grécia', 'Europa', 2],
+    ['Turquia', 'Europa/Ásia', 2],
+    ['Rússia', 'Europa/Ásia', 1],
+    ['Polônia', 'Europa', 2],
+    ['Hungria', 'Europa', 3],
+    ['Áustria', 'Europa', 2],
+    ['Suíça', 'Europa', 1],
+    ['Bélgica', 'Europa', 2],
+    ['Holanda', 'Europa', 2],
+    ['Dinamarca', 'Europa', 2],
+    ['Suécia', 'Europa', 2],
+    ['Noruega', 'Europa', 2],
+    ['Finlândia', 'Europa', 2],
+    ['Irlanda', 'Europa', 2],
+    ['África do Sul', 'África', 1],
+    ['Nigéria', 'África', 1],
+    ['Marrocos', 'África', 2],
+    ['Argélia', 'África', 2],
+    ['Tunísia', 'África', 2],
+    ['Quênia', 'África', 2],
+    ['Tanzânia', 'África', 2],
+    ['Uganda', 'África', 3],
+    ['Etiópia', 'África', 3],
+    ['Gana', 'África', 2],
+    ['Senegal', 'África', 2],
+    ['Angola', 'África', 2],
+    ['Moçambique', 'África', 2],
+    ['Zimbábue', 'África', 3],
+    ['Índia', 'Ásia', 1],
+    ['China', 'Ásia', 1],
+    ['Japão', 'Ásia', 1],
+    ['Coreia do Sul', 'Ásia', 1],
+    ['Indonésia', 'Ásia', 1],
+    ['Tailândia', 'Ásia', 2],
+    ['Vietnã', 'Ásia', 2],
+    ['Filipinas', 'Ásia', 2],
+    ['Malásia', 'Ásia', 2],
+    ['Singapura', 'Ásia', 1],
+    ['Arábia Saudita', 'Ásia', 2],
+    ['Emirados Árabes Unidos', 'Ásia', 1],
+    ['Irã', 'Ásia', 2],
+    ['Iraque', 'Ásia', 3],
+    ['Paquistão', 'Ásia', 2],
+    ['Afeganistão', 'Ásia', 3],
+    ['Nepal', 'Ásia', 3],
+    ['Sri Lanka', 'Ásia', 3],
+    ['Bangladesh', 'Ásia', 3],
+    ['Austrália', 'Oceania', 1],
+    ['Nova Zelândia', 'Oceania', 1],
+    ['Fiji', 'Oceania', 3],
+    ['Samoa', 'Oceania', 3],
+    ['Vanuatu', 'Oceania', 3],
+    ['Tonga', 'Oceania', 3],
+    ['Palau', 'Oceania', 3],
+    ['Nauru', 'Oceania', 3],
+    ['Kiribati', 'Oceania', 3],
+    ['Tuvalu', 'Oceania', 3],
+    ['Ilhas Marshall', 'Oceania', 3],
+    ['Micronésia', 'Oceania', 3],
+    ['Papua Nova Guiné', 'Oceania', 2],
+    ['Ilhas Salomão', 'Oceania', 3],
+    ['Timor-Leste', 'Ásia', 3],
+    ['Geórgia', 'Europa/Ásia', 2],
+    ['Armênia', 'Europa/Ásia', 3],
+    ['Azerbaijão', 'Europa/Ásia', 3],
+    ['Chipre', 'Europa/Ásia', 3],
+    ['Malta', 'Europa', 3],
+    ['Luxemburgo', 'Europa', 3],
+    ['Andorra', 'Europa', 3],
+    ['Mônaco', 'Europa', 3],
+    ['San Marino', 'Europa', 3],
+    ['Cidade do Vaticano', 'Europa', 3],
+    ['Kosovo', 'Europa', 3],
+    ['Montenegro', 'Europa', 3],
+    ['Albânia', 'Europa', 3],
+    ['Macedônia do Norte', 'Europa', 3],
+    ['Sérvia', 'Europa', 3]
+]
+    elif cat == 3:
+        #esporte
+        categoria = "Esporte"
+        print("Esporte")
+    elif cat == 4:
+        #jogos
+        categoria = "Jogos"
+        print("Jogos")
+    elif cat == 5:
+        #instrumentos_musicais
+        categoria = "Instrumentos musicais"
+        print("Instrumentos musicais")
+    
+    
+    erros = 0
+    jogadas = []
+    fim = False
+    dica = False
+    
+    selecionada = random.choice(palavras)
+    palavra = unicodedata.normalize('NFD', selecionada[0].upper()).encode('ascii', 'ignore').decode('utf-8')
+    dificuldade = "Fácil" if selecionada[2] == 1 else "Médio" if selecionada[2] == 2 else "Difícil"
+    dig = []
+    for letra in palavra:
+        if letra == " ":
+            dig.append(" ")
+        elif letra == "-":
+            dig.append("-")
+        else:
+            dig.append("_")
+    print(palavra)
+    
+    while not fim:
+        os.system("cls")
+        print(f"\033[36m{categoria}\033[m")
+        print(f"{dificuldade} | Letras: {len(palavra)}")
+        if len(jogadas) > 0:
+            print(f"Jogadas: {' - '.join(jogadas)}")
+        if dica:
+            print(f"\033[33mDica: {selecionada[1]}\033[m")
 
-pontuacao = 0
-erros = 0
+        print(forca[erros])
+        
+        print(" ".join(dig))
+        digitado = ""
+        if dica or erros > 5: 
+            digitado = input('''\nDigite uma letra ou a palavra completa: ''')
+        else:
+            digitado = input('''\nDigite uma letra ou a palavra completa, 5 para dica(-1 vida): ''')
+            
+        if digitado.isdigit():
+            if dica:
+                print("\033[31mVocê já pediu uma dica.\033[m")
+            elif erros > 5:
+                print("\033[31mVocê não pode mais pedir a dicas.\033[m")
+            else:
+                dica = True
+                erros += 1
+        else:
+            digitado = unicodedata.normalize('NFD', digitado.upper()).encode('ascii', 'ignore').decode('utf-8')
+            if len(digitado) == 1 and re.match("^[A-Z]$", digitado):
+                if digitado in jogadas:
+                    print("\033[31mVocê já tentou essa letra.\033[m")
+                elif digitado in palavra:
+                    jogadas.append(digitado)
+                    for p in range(len(palavra)):
+                        if palavra[p] == digitado:
+                            dig[p] = digitado
+                else:
+                    jogadas.append(digitado)
+                    erros += 1
+                    print("\033[31mLetra incorreta.\033[m")
+            elif len(digitado) > 1:
+                if digitado == palavra:
+                    fim = True
+                    print(f"\033[32mParabéns, você acertou a palavra {selecionada[0]}!\033[m")
+                else:
+                    erros += 1
+                    print("\033[31mPalavra incorreta.\033[m")
+            else:
+                print("\033[31mEntrada inválida. Digite uma letra ou a palavra completa.\033[m")  
+        
+        if erros > 6:
+            fim = True
+            print(f"\033[31mVocê perdeu! A palavra era: {selecionada[0]}\033[m")
+            time.sleep(2)
+        elif "_" not in dig:
+            fim = True
+            print("\033[32mParabéns, você acertou a palavra!\033[m")
+            time.sleep(2)
+        time.sleep(1)
+    input("\033[36mPressione Enter para continuar...\033[m")
+    os.system("cls")
+    opt = input(menu)
 
-if opt == 1:
-      os.system("cls")
-      cat = input(categorias)
-      while not cat.isdigit() or int(cat) > 5 or int(cat) < 1:
-            os.system("cls")
-            print("\033[31mOpção inválida, tente novamente.\033[m")
-            cat = input(categorias)
-      cat = int(cat)
-      
-      if cat == 1:
-            #geral
-            categoria = "Geral"
-            print("Geral")
-      elif cat == 2:
-            #cep
-            categoria = "CEP"
-            palavras = [
-            ['Brasil', 'América do Sul',1],
-            ['Canadá', 'América do Norte',1],
-            ['Madagascar', 'África',2],
-            ['Cazaquistão', 'Ásia',3],
-            ['Islândia', 'Europa',2],
-            ['Quirguistão', 'Ásia',3],
-            ['Butão', 'Ásia',2],
-            ['Liechtenstein', 'Europa',3],
-            ['Croácia', 'Europa',2],
-            ['Uruguai', 'América do Sul',1],
-            ['Egito', 'África',1],
-            ['Chade', 'África',3],
-            ['Eslováquia', 'Europa',3],
-            ['Togo', 'África',1],
-            ['Zâmbia', 'África',2],
-            ['Alasca', 'América do Norte',2],
-            ['Tasmânia', 'Oceania', 3],
-            ['Quebec', 'América do Norte', 2],
-            ['Andaluzia', 'Europa', 3],
-            ['Baviera', 'Europa', 2],
-            ['Califórnia', 'América do Norte', 1],
-            ['Punjab', 'Ásia', 2],
-            ['Galícia', 'Europa', 3],
-            ['Guarani', 'América do Sul', 2],
-            ['Hokkaido', 'Ásia', 3],
-            ['Tóquio', 'Ásia', 1],
-            ['Nairobi', 'África', 2],
-            ['Zurique', 'Europa', 2],
-            ['Recife', 'América do Sul', 1],
-            ['Edimburgo', 'Europa', 3],
-            ['Valparaíso', 'América do Sul', 2],
-            ['Istambul', 'Europa/Ásia', 2],
-            ['Ljubljana', 'Europa', 3],
-            ['Córdoba', 'América do Sul', 2],
-            ['Bruges', 'Europa', 3],
-            ['Cracóvia', 'Europa', 2],
-            ['Arequipa', 'América do Sul', 2],
-            ['Manágua', 'América Central', 2],
-            ['Chiang Mai', 'Ásia', 2],
-            ['Xangai', 'Ásia', 1],
-            ['Osasco', 'América do Sul', 1],
-            ['Mendoza', 'América do Sul', 2],
-            ['Helsinque', 'Europa', 2],
-            ['Gênova', 'Europa', 2],
-            ['Cusco', 'América do Sul', 2],
-            ['Cusco', 'América do Sul', 2],
-            ['Galícia', 'Europa', 3],
-            ['Liechtenstein', 'Europa', 3],
-            ['Baviera', 'Europa', 2],
-            ['Zâmbia', 'África', 2],
-            ['Liechtenstein', 'Europa', 3],
-            ['Tóquio', 'Ásia', 1],
-            ['Ljubljana', 'Europa', 3],
-            ['Recife', 'América do Sul', 1],
-            ['Bruges', 'Europa', 3],
-            ['Eslováquia', 'Europa', 3],
-            ['Hokkaido', 'Ásia', 3],
-            ['Alasca', 'América do Norte', 2],
-            ['Xangai', 'Ásia', 1],
-            ['Tasmânia', 'Oceania', 3],
-            ['Quebec', 'América do Norte', 2],
-            ['Madagascar', 'África', 2],
-            ['Galícia', 'Europa', 3],
-            ['Butão', 'Ásia', 2],
-            ['Istambul', 'Europa/Ásia', 2],
-            ['Hokkaido', 'Ásia', 3],
-            ['Manágua', 'América Central', 2],
-            ['Brasil', 'América do Sul', 1],
-            ['Canadá', 'América do Norte', 1],
-            ['Madagascar', 'África', 2],
-            ['Liechtenstein', 'Europa', 3],
-            ['Alasca', 'América do Norte', 2],
-            ['Andaluzia', 'Europa', 3],
-            ['Califórnia', 'América do Norte', 1],
-            ['Liechtenstein', 'Europa', 3],
-            ['Quebec', 'América do Norte', 2],
-            ['Cusco', 'América do Sul', 2],
-            ['Punjab', 'Ásia', 2],
-            ['Croácia', 'Europa', 2],
-            ['Islândia', 'Europa', 2],
-            ['Quirguistão', 'Ásia', 3],
-            ['Cracóvia', 'Europa', 2],
-            ['Cusco', 'América do Sul', 2],
-            ['Osasco', 'América do Sul', 1],
-            ['Gênova', 'Europa', 2],
-            ['Helsinque', 'Europa', 2],
-            ['Madagascar', 'África', 2],
-            ['Islândia', 'Europa', 2],
-            ['Galícia', 'Europa', 3],
-            ['Canadá', 'América do Norte', 1],
-            ['Recife', 'América do Sul', 1],
-            ['Chiang Mai', 'Ásia', 2],
-            ['Quebec', 'América do Norte', 2],
-            ['Ljubljana', 'Europa', 3],
-            ['Cracóvia', 'Europa', 2],
-            ['Califórnia', 'América do Norte', 1],
-            ['Canadá', 'América do Norte', 1],
-            ['Quebec', 'América do Norte', 2],
-            ['Galícia', 'Europa', 3],
-            ['Xangai', 'Ásia', 1],
-            ['Helsinque', 'Europa', 2],
-            ['Cusco', 'América do Sul', 2],
-            ['Islândia', 'Europa', 2],
-            ['Tasmânia', 'Oceania', 3],
-            ['Islândia', 'Europa', 2],
-            ['Andaluzia', 'Europa', 3],
-            ['Galícia', 'Europa', 3],
-            ['Ljubljana', 'Europa', 3],
-            ['Edimburgo', 'Europa', 3],
-            ['Cazaquistão', 'Ásia', 3]
-            ]
-      elif cat == 3:
-            #esporte
-            categoria = "Esporte"
-            print("Esporte")
-      elif cat == 4:
-            #jogos
-            categoria = "Jogos"
-            print("Jogos")
-      elif cat == 5:
-            #instrumentos_musicais
-            categoria = "Instrumentos musicais"
-            print("Instrumentos musicais")
-      
 
-      os.system("cls")
-      
-      selecionada = random.choice(palavras)
-      print(selecionada)
-      palavra = selecionada[0]
-      dificuldade = "Fácil" if selecionada[2] == 1 else "Médio" if selecionada[2] == 2 else "Difícil"
-      
-      print(f"Categoria: {categoria} | Dificuldade: {dificuldade}")
-      
-      
-      
-      
-      
-      
-      
-else:
-      os.system("cls")
-      print("\033[31mSaindo...\033[m")
+os.system("cls")
+print("\033[31mSaindo...\033[m")
