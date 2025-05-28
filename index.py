@@ -48,11 +48,11 @@ forca = ['''┌──────┐
 │''','''┌──────┐
 │     ┌─┐
 │     └─┘
-│    ═════
+│    \033[31m═════\033[m
 │     /│\\
 │      │ 
 │     / \\
-    ░░░░░░░░''']
+    \033[31m░░░░░░░░\033[m''']
 
 # chame usando print(forca[*])
 
@@ -80,9 +80,21 @@ categorias = '''
 ------------------------------------------
 Digite o número da categoria desejada: '''
 
+difiMenu = '''
+\033[36m╔════════════════════════════════════════╗\033[m
+\033[36m║\033[m             \033[38mDIFICULDADE \033[m               \033[36m║\033[m
+\033[36m╚════════════════════════════════════════╝\033[m
+
+ [1] Fácil
+ [2] Médio
+ [3] Difícil
+ [4] Aleatório
+
+------------------------------------------
+Digite o número da dificuldade desejada: '''
+
 
 os.system("cls")
-
 opt = input(menu)
 while not opt.isdigit() or int(opt) > 2 or int(opt) < 1:
       os.system("cls")
@@ -104,8 +116,9 @@ while opt != 2:
         if cat == 1:
             #geral
             categoria = "Geral"
-            print("Geral")
-        elif cat == 2:
+            cat = random.randint(2, 5)
+            
+        if cat == 2:
             #cep
             categoria = "CEP"
             palavras = [
@@ -303,7 +316,68 @@ while opt != 2:
         elif cat == 4:
             #jogos
             categoria = "Jogos"
-            print("Jogos")
+            palavras = [
+            ["Angron","Warhammer 40k - World Eaters",1],
+            ["Fulgrim","Warhammer 40k - Emperor's Children",1],
+            ["Rogal Dorn","Warhammer 40k - Imperial Fists",2],
+            ["Leman Russ","Warhammer 40k - Space Wolves",2],
+            ["Lion El Johnson","Warhammer 40k - Dark Angels",3],
+            ["Roboute Guilliman","Warhammer 40k - Ultramarines",3],
+            ["John","Halo - Master Chief",1],
+            ["Reach","Halo - The Fall",1],
+            ["Forerunner","Halo - Didact",2],
+            ["Harvest","Halo - Contact",2],
+            ["Sangheili","Halo - Elites",3],
+            ["Jiralhanae","Halo - Brute",3],
+            ["Rusty","Armored Core VI - V4",1],
+            ["Ayre","Armored Core VI - Coral Wave",1],
+            ["Rubicon","Armored Core VI - Fires of",2],
+            ["Michigan","Armored Core VI - G1",2],
+            ["Institute City","Armored Core VI - Cel-240",3],
+            ["Alea Iacta Est","Armored Core VI - ALLMIND",3],
+            ["Ruiner","Monster Hunter World - Nergigante",1],
+            ["Brachydios","Monster Hunter World - Raging",1],
+            ["Lunastra","Monster Hunter World - Teostra",2],
+            ["Velkhana","Monster Hunter World - Iceborne",2],
+            ["Kulve Taroth","Monster Hunter World - El Dorado",3],
+            ["Safi'Jiiva","Monster Hunter World - Sapphire Star",3],
+            ["Gwyn","Dark Souls - Lord of Sunlight",1],
+            ["Solaire","Dark Souls - Praise the Sun",1],
+            ["Artorias","Dark Souls - Abyss Walker",2],
+            ["Ornstein","Dark Souls - Dragon Slayer",2],
+            ["Izalith","Dark Souls - The Witch",3],
+            ["Tarkus","Dark Souls - Black Iron",3],
+            ["Kos","Bloodborne - Orphan",1],
+            ["Gerhman","Bloodborne - The First Hunter",1],
+            ["Lady Maria","Bloodborne - Doll",2],
+            ["Yharnam","Bloodborne - Old",2],
+            ["Annalise","Bloodborne - Queen",3],
+            ["Cainhurst","Bloodborne - Vileblood",3],
+            ["Margit","Elden Ring - Fell Omen",1],
+            ["Radagon","Elden Ring - Golden Order",1],
+            ["Messmer","Elden Ring - The Impaler",2],
+            ["Marika","Elden Ring - The Eternal",2],
+            ["Placidussax","Elden Ring - Dragon Lord",3],
+            ["Haligtree","Elden Ring - Miquella",3],
+            ["Anatolia","Armored Core For Answer - Mercenary",1],
+            ["Old King","Armored Core For Answer - Millions will die, exiting don't you think?",1],
+            ["White Glint","Armored Core For Answer - Joshua O'brien",2],
+            ["Supplice","Armored Core For Answer - Berlioz",2],
+            ["Noblesse Oblige","Armored Core For Answer - Leonhardt",3],
+            ["Kojima","Armored Core For Answer - Particle",3],
+            ["Automata","Nier Automata - 2B",1],
+            ["Adam","Nier Automata - Eve",1],
+            ["Simone","Nier Automata - Amusement Park",2],
+            ["Pascal","Nier Automata - Pacifist",2],
+            ["Popola","Nier Automata - Devola",3],
+            ["Immanuel","Nier Automata - Forest Castle",3],
+            ["Replicant","Nier Replincant - Gestalt",1],
+            ["Kainé","Nier Replincant - Possessed",1],
+            ["Devola","Nier Replincant - Popola",2],
+            ["Rubrum","Nier Replincant - Emil",2],
+            ["Grimoire","Nier Replincant - Weiss",3],
+            ["Yonah","Nier Replincant - Sister",3]
+            ]
         elif cat == 5:
             #instrumentos_musicais
             categoria = "Instrumentos musicais"
@@ -365,7 +439,19 @@ while opt != 2:
         fim = False
         dica = False
         
+        dif = int(input(difiMenu))
+        while dif > 4 or dif < 1:
+            os.system("cls")
+            print("\033[31mOpção inválida, tente novamente.\033[m")
+            dif = int(input(difiMenu))
+            
         selecionada = random.choice(palavras)
+        
+        if dif != 4:
+            while selecionada[2] != dif:
+                selecionada = random.choice(palavras)
+
+        
         palavra = unicodedata.normalize('NFD', selecionada[0].upper()).encode('ascii', 'ignore').decode('utf-8')
         dificuldade = "Fácil" if selecionada[2] == 1 else "Médio" if selecionada[2] == 2 else "Difícil"
         dig = []
@@ -430,6 +516,8 @@ while opt != 2:
             
             if erros > 6:
                 fim = True
+                os.system("cls")
+                print(forca[erros])
                 print(f"\033[31mVocê perdeu! A palavra era: {selecionada[0]}\033[m")
                 time.sleep(2)
             elif "_" not in dig:
